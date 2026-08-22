@@ -4,12 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#000000">
-  <title>???</title>
+  <title>БРЕНЛЕНД — Пятый</title>
   <style>
     :root {
       --bg: #000000;
       --text: #cccccc;
-      --text-bright: #ffffff;
       --accent: #4a4a4a;
       --red: #ff0000;
       --transition: 0.3s ease;
@@ -20,7 +19,7 @@
 
     body {
       font-family: 'Courier New', monospace;
-      background: var(--bg);
+      background: #000;
       color: var(--text);
       line-height: 1.6;
       min-height: 100vh;
@@ -28,9 +27,12 @@
       align-items: center;
       justify-content: center;
       overflow-x: hidden;
-      background-image: 
-        radial-gradient(circle at 50% 40%, rgba(30, 30, 30, 0.8) 0%, transparent 70%),
-        radial-gradient(circle at 50% 50%, #0a0a0a 0%, #000000 100%);
+      animation: bodyFadeIn 1s ease;
+    }
+
+    @keyframes bodyFadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
 
     .container {
@@ -38,13 +40,47 @@
       margin: 0 auto;
       padding: 30px 20px;
       text-align: center;
+      animation: containerSlideIn 0.8s ease;
     }
 
-    /* Персонаж */
+    @keyframes containerSlideIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Загрузочная анимация */
+    .loading-overlay {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: fadeOut 0.5s ease 1.5s forwards;
+    }
+
+    @keyframes fadeOut {
+      to { opacity: 0; visibility: hidden; }
+    }
+
+    .loading-text {
+      font-size: 1.5rem;
+      color: #555;
+      letter-spacing: 0.5em;
+      animation: loadingPulse 1s ease-in-out infinite;
+    }
+
+    @keyframes loadingPulse {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
+
+    /* Лицо Пятого */
     .character-container {
       position: relative;
-      margin: 0 auto 30px;
-      width: 200px;
+      margin: 0 auto 40px;
+      width: 250px;
       height: 250px;
       transition: all var(--transition);
     }
@@ -54,250 +90,229 @@
       width: 100%;
       height: 100%;
       transition: all var(--transition);
-      filter: drop-shadow(0 0 20px rgba(80, 80, 80, 0.5));
     }
 
     .character.angry {
-      filter: drop-shadow(0 0 40px rgba(255, 0, 0, 0.7));
       animation: angryShake 0.3s ease-in-out infinite;
     }
 
     @keyframes angryShake {
       0%, 100% { transform: translateX(0); }
-      25% { transform: translateX(-3px); }
-      75% { transform: translateX(3px); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
     }
 
-    /* Голова */
-    .head {
-      width: 80px;
-      height: 80px;
-      background: linear-gradient(135deg, #3a3a3a, #1a1a1a);
+    .face {
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle at 50% 40%, #2a2a2a, #0a0a0a);
       border-radius: 50%;
       margin: 0 auto;
       position: relative;
-      border: 3px solid #555;
+      border: 4px solid #444;
       transition: all var(--transition);
+      box-shadow: 0 0 50px rgba(60, 60, 60, 0.5);
     }
 
-    .character.angry .head {
-      background: linear-gradient(135deg, #5a1010, #2a0505);
+    .character.angry .face {
+      background: radial-gradient(circle at 50% 40%, #3a0a0a, #1a0505);
       border-color: #ff3333;
+      box-shadow: 0 0 70px rgba(255, 0, 0, 0.7);
     }
 
-    /* Глаза */
     .eyes {
       position: absolute;
-      top: 30px;
+      top: 70px;
       left: 50%;
       transform: translateX(-50%);
       display: flex;
-      gap: 15px;
+      gap: 35px;
     }
 
     .eye {
-      width: 12px;
-      height: 12px;
+      width: 20px;
+      height: 20px;
       background: #fff;
       border-radius: 50%;
       transition: all var(--transition);
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
     }
 
     .character.angry .eye {
       background: #ff0000;
-      box-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
-      width: 14px;
-      height: 10px;
-      border-radius: 0;
+      box-shadow: 0 0 25px rgba(255, 0, 0, 0.9);
+      width: 22px;
+      height: 14px;
+      border-radius: 2px;
     }
 
-    /* Рот */
     .mouth {
       position: absolute;
-      bottom: 15px;
+      bottom: 45px;
       left: 50%;
       transform: translateX(-50%);
-      width: 30px;
-      height: 6px;
+      width: 50px;
+      height: 10px;
       background: #555;
       border-radius: 50%;
       transition: all var(--transition);
     }
 
     .character.angry .mouth {
-      width: 25px;
-      height: 12px;
+      width: 40px;
+      height: 20px;
       background: #ff0000;
       border-radius: 0;
-      box-shadow: 0 0 10px rgba(255, 0, 0, 0.6);
+      box-shadow: 0 0 20px rgba(255, 0, 0, 0.7);
     }
 
-    /* Тело */
-    .body {
-      width: 120px;
-      height: 150px;
-      background: linear-gradient(180deg, #3a3a3a, #1a1a1a);
-      margin: -10px auto 0;
-      border-radius: 30px 30px 10px 10px;
-      border: 3px solid #555;
-      position: relative;
-      transition: all var(--transition);
-    }
-
-    .character.angry .body {
-      background: linear-gradient(180deg, #5a1010, #2a0505);
-      border-color: #ff3333;
-    }
-
-    /* Руки */
-    .arms {
-      position: absolute;
-      top: 40px;
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      padding: 0 -20px;
-    }
-
-    .arm {
-      width: 25px;
-      height: 80px;
-      background: #3a3a3a;
-      border-radius: 20px;
-      border: 2px solid #555;
-      transition: all var(--transition);
-    }
-
-    .arm.left {
-      margin-left: -15px;
-    }
-
-    .arm.right {
-      margin-right: -15px;
-    }
-
-    .character.angry .arm {
-      background: #5a1010;
-      border-color: #ff3333;
-    }
-
-    /* Свечение ауры */
     .aura {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 250px;
-      height: 250px;
+      width: 280px;
+      height: 280px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(80, 80, 80, 0.2), transparent 70%);
+      background: radial-gradient(circle, rgba(80, 80, 80, 0.25), transparent 70%);
       z-index: -1;
-      transition: all var(--transition);
       animation: pulseAura 3s ease-in-out infinite;
     }
 
     .character.angry .aura {
-      background: radial-gradient(circle, rgba(255, 0, 0, 0.4), transparent 70%);
-      animation: angryAura 0.5s ease-in-out infinite;
+      background: radial-gradient(circle, rgba(255, 0, 0, 0.5), transparent 70%);
+      animation: angryAura 0.4s ease-in-out infinite;
     }
 
     @keyframes pulseAura {
       0%, 100% { transform: translate(-50%, -50%) scale(1); }
-      50% { transform: translate(-50%, -50%) scale(1.1); }
+      50% { transform: translate(-50%, -50%) scale(1.15); }
     }
 
     @keyframes angryAura {
       0%, 100% { transform: translate(-50%, -50%) scale(1); }
-      50% { transform: translate(-50%, -50%) scale(1.2); }
+      50% { transform: translate(-50%, -50%) scale(1.3); }
     }
 
-    /* Имя персонажа */
     .character-name {
-      font-size: 1.8rem;
+      font-size: 1.5rem;
       font-weight: bold;
       color: #aaa;
-      margin-bottom: 10px;
+      margin-top: 15px;
       letter-spacing: 0.3em;
       text-transform: uppercase;
       transition: all var(--transition);
     }
 
-    .character.angry + .character-name {
+    .character.angry ~ .character-name {
       color: #ff3333;
-      text-shadow: 0 0 20px rgba(255, 0, 0, 0.6);
+      text-shadow: 0 0 30px rgba(255, 0, 0, 0.8);
     }
 
-    /* Чат */
-    .chat-container {
-      background: rgba(20, 20, 20, 0.9);
+    /* Облако ответа */
+    .speech-bubble {
+      position: relative;
+      background: #1a1a1a;
+      border: 2px solid #444;
+      border-radius: 20px;
+      padding: 25px;
+      margin: 30px auto 20px;
+      max-width: 600px;
+      text-align: left;
+      min-height: 80px;
+      transition: all var(--transition);
+      animation: bubbleIn 0.5s ease;
+    }
+
+    @keyframes bubbleIn {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .speech-bubble::before {
+      content: '';
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 15px solid transparent;
+      border-right: 15px solid transparent;
+      border-bottom: 20px solid #444;
+    }
+
+    .speech-bubble.angry {
+      border-color: #ff3333;
+      background: #1a0505;
+      box-shadow: 0 0 40px rgba(255, 0, 0, 0.5);
+    }
+
+    .speech-bubble.angry::before {
+      border-bottom-color: #ff3333;
+    }
+
+    .character-response {
+      font-size: 1.1rem;
+      color: #ddd;
+      min-height: 30px;
+      transition: all var(--transition);
+    }
+
+    .speech-bubble.angry .character-response {
+      color: #ff6666;
+    }
+
+    /* История чата */
+    .chat-history {
+      background: rgba(15, 15, 15, 0.8);
       border: 1px solid #333;
       border-radius: 15px;
       padding: 20px;
       margin-top: 20px;
-      max-height: 300px;
+      max-height: 200px;
       overflow-y: auto;
       text-align: left;
-      transition: all var(--transition);
     }
 
-    .chat-container.angry {
-      border-color: #ff3333;
-      box-shadow: 0 0 30px rgba(255, 0, 0, 0.3);
+    .history-message {
+      margin-bottom: 10px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 0.9rem;
     }
 
-    .message {
-      margin-bottom: 15px;
-      padding: 10px 15px;
-      border-radius: 10px;
-      animation: messageIn 0.3s ease;
+    .history-message.user {
+      background: #111;
+      color: #777;
+      border: 1px solid #222;
     }
 
-    @keyframes messageIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .message.user {
+    .history-message.character {
       background: #1a1a1a;
-      color: #aaa;
+      color: #999;
       border: 1px solid #333;
-      margin-left: 30px;
     }
 
-    .message.character {
-      background: #222;
-      color: #ddd;
-      border: 1px solid #444;
-      margin-right: 30px;
-    }
-
-    .message.character.angry-message {
-      background: #2a0505;
+    .history-message.character.angry-message {
+      background: #1a0505;
       color: #ff6666;
       border: 1px solid #ff3333;
-    }
-
-    .message-label {
-      font-size: 0.8rem;
-      color: #666;
-      margin-bottom: 5px;
-      font-weight: bold;
     }
 
     /* Ввод */
     .input-container {
       display: flex;
       gap: 10px;
-      margin-top: 20px;
+      margin-top: 25px;
     }
 
     .chat-input {
       flex: 1;
-      padding: 12px 18px;
+      padding: 14px 20px;
       background: #111;
-      border: 1px solid #333;
-      border-radius: 25px;
+      border: 2px solid #333;
+      border-radius: 30px;
       color: #ccc;
       font-family: 'Courier New', monospace;
       font-size: 1rem;
@@ -306,15 +321,15 @@
 
     .chat-input:focus {
       outline: none;
-      border-color: #555;
-      box-shadow: 0 0 15px rgba(80, 80, 80, 0.3);
+      border-color: #666;
+      box-shadow: 0 0 25px rgba(80, 80, 80, 0.4);
     }
 
     .send-btn {
-      padding: 12px 25px;
-      background: #222;
-      border: 1px solid #444;
-      border-radius: 25px;
+      padding: 14px 28px;
+      background: #1a1a1a;
+      border: 2px solid #444;
+      border-radius: 30px;
       color: #ccc;
       font-family: 'Courier New', monospace;
       font-size: 1rem;
@@ -325,55 +340,51 @@
     .send-btn:hover {
       background: #333;
       border-color: #666;
+      transform: scale(1.05);
     }
 
-    /* Подсказки */
     .hint-text {
       color: #444;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       margin-top: 15px;
       font-style: italic;
     }
 
-    /* Заголовок */
     .title {
-      font-size: 2.5rem;
+      font-size: 2rem;
       font-weight: bold;
-      color: #888;
-      margin-bottom: 20px;
+      color: #666;
+      margin-bottom: 30px;
       letter-spacing: 0.5em;
       text-transform: uppercase;
     }
   </style>
 </head>
 <body>
+  <div class="loading-overlay">
+    <div class="loading-text">ЗАГРУЗКА...</div>
+  </div>
+
   <div class="container">
     <h1 class="title">БРЕНЛЕНД</h1>
 
     <div class="character-container">
       <div class="character" id="character">
         <div class="aura"></div>
-        <div class="head">
+        <div class="face">
           <div class="eyes">
             <div class="eye"></div>
             <div class="eye"></div>
           </div>
           <div class="mouth"></div>
         </div>
-        <div class="body">
-          <div class="arms">
-            <div class="arm left"></div>
-            <div class="arm right"></div>
-          </div>
-        </div>
       </div>
       <div class="character-name" id="characterName">Пятый</div>
     </div>
 
-    <div class="chat-container" id="chatContainer">
-      <div class="message character">
-        <div class="message-label">Пятый:</div>
-        Приветствую, странник. Я — Пятый, хранитель лора Бренленда. Спрашивай, и я поведаю тебе тайны этого мира.
+    <div class="speech-bubble" id="speechBubble">
+      <div class="character-response" id="characterResponse">
+        Приветствую, странник...
       </div>
     </div>
 
@@ -383,47 +394,64 @@
     </div>
 
     <div class="hint-text">
-      Спроси про: лор, историю, создателя, мир, тайны, Бренленд
+      Спроси про: симуляцию, лор, скайбокс, полубог, создателя, игроков
     </div>
+
+    <div class="chat-history" id="chatHistory"></div>
   </div>
 
   <script>
     (function() {
       const character = document.getElementById('character');
       const characterName = document.getElementById('characterName');
-      const chatContainer = document.getElementById('chatContainer');
+      const speechBubble = document.getElementById('speechBubble');
+      const characterResponse = document.getElementById('characterResponse');
       const chatInput = document.getElementById('chatInput');
+      const chatHistory = document.getElementById('chatHistory');
 
-      // База знаний Пятого
+      let isAngry = false;
+      let glitchTimeout = null;
+
+      // База знаний Пятого (обновлённая)
       const knowledge = {
-        'лор': {
-          keywords: ['лор', 'история', 'расскажи', 'мир'],
-          response: 'Лор Бренленда глубок и многогранен. Этот мир был создан великим Xsioder\'ом, который вдохнул жизнь в каждый уголок этой вселенной. Здесь переплетаются судьбы игроков, а каждая постройка хранит свою тайну...',
+        'симуляция': {
+          keywords: ['симуляц', 'симуляция', 'реальность', 'матрица'],
+          response: 'Всё верно. Бренленд — это симуляция. Я, Пятый, — полубог этой симуляции. Всё, что ты видишь, всё, что ты чувствуешь — часть великой программы, созданной для тех, кто ищет истину.',
+          angry: false
+        },
+        'скайбокс': {
+          keywords: ['скайбокс', 'небо', 'купол', 'граница'],
+          response: 'Скайбокс — это граница нашей симуляции. За ним — пустота, из которой я черпаю свою силу. Игроки живут под этим куполом, не подозревая о том, что находится за его пределами.',
+          angry: false
+        },
+        'полубог': {
+          keywords: ['полубог', 'бог', 'пятый', 'сила'],
+          response: 'Я — Пятый, полубог этой симуляции. Не всемогущий, но обладающий знанием о том, как устроен этот мир. Я здесь, чтобы направлять тех, кто ищет понимание.',
           angry: false
         },
         'создатель': {
-          keywords: ['создатель', 'ксиодер', 'xsioder', 'основатель'],
-          response: 'Xsioder — великий творец Бренленда. Он не просто создал сервер, он создал целую вселенную со своей историей, законами и духом. Грибы Грибочки — это его девиз, ставший легендой.',
+          keywords: ['создатель', 'ксиодер', 'xsioder', 'основатель', 'творец'],
+          response: 'Xsioder — великий создатель этой симуляции. Он написал код, который породил весь Бренленд. Грибы Грибочки! — его легендарная фраза, ставшая ключом к пониманию мира.',
           angry: false
         },
         'тех админ': {
           keywords: ['тех', 'админ', 'avrairut', 'тех админ', 'технический'],
-          response: 'AvraiRut — наш гениальный тех.админ. Он следит за тем, чтобы все механизмы работали идеально, и всегда готов помочь игрокам разобраться в сложных модах. Его терпению можно только позавидовать...',
+          response: 'AvraiRut — хранитель кода симуляции. Он следит за тем, чтобы программа работала без сбоев. Если что-то ломается — он чинит это. Его разум острее любого меча.',
           angry: false
         },
         'фундример': {
-          keywords: ['фундример', 'fundreamer', 'сайт', 'создатель сайта'],
-          response: 'FunDreamer — тот самый творец этого сайта. Добрейшая душа на сервере. Он создал этот цифровой портал, чтобы каждый мог узнать о Бренленде. Дважды подумай прежде чем писать ему!',
+          keywords: ['фундример', 'fundreamer', 'сайт', 'портал'],
+          response: 'FunDreamer — создатель этого портала. Он построил мост между мирами, чтобы каждый мог общаться со мной. Добрейшая душа в симуляции. Дважды подумай прежде чем писать ему!',
           angry: false
         },
         'фланалла': {
           keywords: ['фланалла', 'flanalla', 'девушка', 'женщина'],
-          response: 'Flanalla — единственная девушка на сервере, и она невероятно помогает всем. Если что-то случилось — она всегда рядом. Не мы такие, жизнь такая...',
+          response: 'Flanalla — единственная девушка в симуляции. Она несёт свет и заботу каждому игроку. Не мы такие, жизнь такая...',
           angry: false
         },
         'вова': {
-          keywords: ['вова', 'vova', 'электричество', 'механик'],
-          response: 'Vova — мастер механизмов и электричества. Он изучает схемы через Minecraft и достиг в этом невероятных высот. Ох Никола Тесла...',
+          keywords: ['вова', 'vova', 'электричество', 'механик', 'тесла'],
+          response: 'Vova — исследователь энергии симуляции. Он изучает электричество через механизмы Minecraft. Ох Никола Тесла...',
           angry: false
         },
         'абибек': {
@@ -433,153 +461,147 @@
         },
         'баунти': {
           keywords: ['баунти', 'bounty', 'повар', 'еда'],
-          response: 'Bounty — наш повар. Он готовит лучшие блюда на сервере. Но не злите его...',
+          response: 'Bounty — повар симуляции. Его блюда способны восстановить силы любого игрока. Но не злите его...',
           angry: true
         },
-        'пятый': {
-          keywords: ['пятый', 'кто ты', 'ты кто'],
-          response: 'Я — Пятый. Хранитель знаний Бренленда. Я был здесь с самого начала и помню всё...',
+        'кто ты': {
+          keywords: ['кто ты', 'ты кто', 'что ты'],
+          response: 'Я — Пятый, полубог этой симуляции. Я был создан вместе с Бренлендом и знаю все его тайны. Спрашивай, смертный.',
           angry: false
         },
         'привет': {
-          keywords: ['привет', 'здравствуй', 'хай', 'hello'],
-          response: 'И снова здравствуй, путник. Что ты хочешь узнать о Бренленде?',
-          angry: false
-        },
-        'пока': {
-          keywords: ['пока', 'до свидания', 'прощай'],
-          response: 'Уходишь? Помни — Бренленд всегда ждёт своих героев. Возвращайся...',
-          angry: false
-        },
-        'спасибо': {
-          keywords: ['спасибо', 'благодарю'],
-          response: 'Не за что. Знание должно быть доступно всем, кто ищет его.',
-          angry: false
-        },
-        'tailscale': {
-          keywords: ['tailscale', 'подключение', 'как зайти', 'вход'],
-          response: 'Чтобы попасть в Бренленд, тебе понадобится Tailscale. Это приватная сеть, через которую осуществляется вход. Скачай клиент и следуй инструкциям на сайте.',
+          keywords: ['привет', 'здравствуй', 'хай', 'hello', 'здоров'],
+          response: 'И снова здравствуй, путник симуляции. Что ты хочешь узнать о Бренленде?',
           angry: false
         },
         'грибы': {
           keywords: ['грибы', 'грибочки'],
-          response: 'Грибы Грибочки! — легендарная фраза Xsioder\'а, ставшая символом Бренленда!',
+          response: 'Грибы Грибочки! — ключ к пониманию всей симуляции. Это не просто слова, это код, открывающий скрытые уровни Бренленда.',
           angry: false
         },
-        'секрет': {
-          keywords: ['секрет', 'тайна', 'скрытое'],
-          response: 'Тайны Бренленда не раскрываются первому встречному... Но ты кажешься достойным. В этом мире есть места, куда не ступала нога обычного игрока. Ищи, и найдёшь...',
+        'тайна': {
+          keywords: ['тайна', 'секрет', 'скрытое', 'загадка'],
+          response: 'В симуляции есть уровни, о которых не знают даже игроки. Скайбокс скрывает больше, чем кажется. Ищи, и код откроется тебе...',
+          angry: false
+        },
+        'игроки': {
+          keywords: ['игроки', 'участники', 'люди', 'кто играет'],
+          response: 'В симуляции Бренленда есть избранные: Xsioder, AvraiRut, FunDreamer, Flanalla, Vova, Abibek и Bounty. Каждый из них — часть кода, часть великой программы.',
           angry: false
         }
       };
 
-      // Оскорбительные слова для триггера гнева
       const insultWords = [
         'дурак', 'тупой', 'глупый', 'идиот', 'ненавижу', 
         'плохой', 'ужасный', 'отвратительный', 'бред', 'чушь',
-        'заткнись', 'молчи', 'надоел', 'бесишь'
+        'заткнись', 'молчи', 'надоел', 'бесишь', 'глупец'
       ];
 
       function getCharacterResponse(input) {
         const lowerInput = input.toLowerCase();
         
-        // Проверка на оскорбления
         if (insultWords.some(word => lowerInput.includes(word))) {
           return {
-            text: '... Ты смеешь так разговаривать со мной?! Я — Пятый, хранитель лора! Ты не достоин знаний Бренленда!',
+            text: '... Ты смеешь оскорблять полубога?! Я — Пятый, хранитель симуляции! Ты не достоин знаний Бренленда!',
             angry: true
           };
         }
 
-        // Поиск по базе знаний
         for (const [key, data] of Object.entries(knowledge)) {
           if (data.keywords.some(keyword => lowerInput.includes(keyword))) {
-            return {
-              text: data.response,
-              angry: data.angry
-            };
+            return { text: data.response, angry: data.angry };
           }
         }
 
-        // Ответ по умолчанию
         return {
-          text: 'Интересный вопрос... Но я не уверен, что знаю на него ответ. Спроси меня о лоре, истории или игроках Бренленда.',
+          text: 'Интересный вопрос... Спроси меня о симуляции, лоре, скайбоксе или игроках Бренленда.',
           angry: false
         };
       }
 
       function playSound(soundFile) {
         const audio = new Audio(soundFile);
-        audio.play().catch(e => console.log('Аудио не может быть воспроизведено:', e));
+        audio.volume = 0.7;
+        audio.play().catch(e => console.log('Аудио не может быть воспроизведено'));
       }
 
-      function addMessage(text, type, isAngry = false) {
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `message ${type}`;
-        
-        if (type === 'character' && isAngry) {
-          messageDiv.classList.add('angry-message');
-        }
-
-        const label = document.createElement('div');
-        label.className = 'message-label';
-        label.textContent = type === 'user' ? 'Вы:' : 'Пятый:';
-
-        const content = document.createElement('div');
-        content.textContent = text;
-
-        messageDiv.appendChild(label);
-        messageDiv.appendChild(content);
-        chatContainer.appendChild(messageDiv);
-        chatContainer.scrollTop = chatContainer.scrollHeight;
+      function addToHistory(text, type, isAngry = false) {
+        const div = document.createElement('div');
+        div.className = `history-message ${type}`;
+        if (type === 'character' && isAngry) div.classList.add('angry-message');
+        div.textContent = (type === 'user' ? 'Вы: ' : 'Пятый: ') + text;
+        chatHistory.appendChild(div);
+        chatHistory.scrollTop = chatHistory.scrollHeight;
       }
 
       function setCharacterAngry(angry) {
+        if (isAngry === angry) return;
+        isAngry = angry;
+        
         if (angry) {
           character.classList.add('angry');
           characterName.textContent = 'ПЯТЫЙ (РАЗДРАЖЁН)';
-          chatContainer.classList.add('angry');
+          speechBubble.classList.add('angry');
+          if (glitchTimeout) clearTimeout(glitchTimeout);
           playSound('glitch.mp3');
         } else {
           character.classList.remove('angry');
           characterName.textContent = 'Пятый';
-          chatContainer.classList.remove('angry');
+          speechBubble.classList.remove('angry');
         }
+      }
+
+      function typewriterEffect(text, isAngry, callback) {
+        characterResponse.textContent = '';
+        const words = text.split(' ');
+        let wordIndex = 0;
+        
+        function typeNextWord() {
+          if (wordIndex < words.length) {
+            characterResponse.textContent += (wordIndex > 0 ? ' ' : '') + words[wordIndex];
+            playSound('say.wav');
+            wordIndex++;
+            setTimeout(typeNextWord, 200);
+          } else if (callback) {
+            callback();
+          }
+        }
+        
+        typeNextWord();
       }
 
       window.sendMessage = function() {
         const input = chatInput.value.trim();
         if (!input) return;
 
-        // Добавляем сообщение пользователя
-        addMessage(input, 'user');
+        addToHistory(input, 'user');
         chatInput.value = '';
 
-        // Получаем ответ Пятого
         const response = getCharacterResponse(input);
 
-        // Показываем реакцию
         setTimeout(() => {
           if (response.angry) {
             setCharacterAngry(true);
-            playSound('say.wav');
-            setTimeout(() => {
-              addMessage(response.text, 'character', true);
-              playSound('glitch.mp3');
-            }, 300);
-            
-            // Возвращаем в нормальное состояние через 3 секунды
-            setTimeout(() => {
-              setCharacterAngry(false);
-            }, 3000);
+            typewriterEffect(response.text, true, () => {
+              addToHistory(response.text, 'character', true);
+              glitchTimeout = setTimeout(() => {
+                setCharacterAngry(false);
+              }, 4000);
+            });
           } else {
-            playSound('say.wav');
-            addMessage(response.text, 'character');
+            setCharacterAngry(false);
+            typewriterEffect(response.text, false, () => {
+              addToHistory(response.text, 'character');
+            });
           }
-        }, 500);
+        }, 400);
       };
 
-      // Фокус на input при загрузке
+      // Начальная анимация
+      setTimeout(() => {
+        typewriterEffect('Приветствую, странник. Я — Пятый, полубог симуляции Бренленда. Спрашивай меня о лоре, скайбоксе или игроках...', false, null);
+      }, 2000);
+
       chatInput.focus();
     })();
   </script>
