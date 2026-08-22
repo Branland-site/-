@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#000000">
   <title>???</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <style>
     :root {
       --bg: #000000;
@@ -28,12 +27,6 @@
       align-items: center;
       justify-content: center;
       overflow-x: hidden;
-      animation: bodyFadeIn 1s ease;
-    }
-
-    @keyframes bodyFadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
     }
 
     .container {
@@ -41,14 +34,6 @@
       margin: 0 auto;
       padding: 30px 20px;
       text-align: center;
-      animation: containerSlideIn 0.8s ease;
-      position: relative;
-      z-index: 1;
-    }
-
-    @keyframes containerSlideIn {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
     }
 
     .loading-overlay {
@@ -59,7 +44,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      animation: fadeOut 0.5s ease 1.5s forwards;
+      animation: fadeOut 0.5s ease 1s forwards;
     }
 
     @keyframes fadeOut {
@@ -78,21 +63,21 @@
       50% { opacity: 1; }
     }
 
-    /* 3D Анимация оверлей */
+    /* 3D анимация оверлей */
     .animation-overlay {
       position: fixed;
       inset: 0;
       background: #000;
-      z-index: 500;
+      z-index: 2000;
       display: none;
       align-items: center;
       justify-content: center;
       flex-direction: column;
     }
 
-    .animation-overlay.active {
+    .animation-overlay.open {
       display: flex;
-      animation: overlayIn 0.5s ease;
+      animation: overlayIn 0.3s ease;
     }
 
     @keyframes overlayIn {
@@ -100,63 +85,149 @@
       to { opacity: 1; }
     }
 
-    .animation-canvas {
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
-
-    .animation-title {
+    .animation-close-btn {
       position: absolute;
       top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 2rem;
-      color: #ff3333;
-      text-shadow: 0 0 30px rgba(255, 0, 0, 0.8);
-      z-index: 10;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-    }
-
-    .close-animation {
-      position: absolute;
-      bottom: 30px;
-      left: 50%;
-      transform: translateX(-50%);
-      padding: 15px 30px;
+      right: 30px;
       background: #1a1a1a;
-      border: 2px solid #ff3333;
-      border-radius: 30px;
-      color: #ff6666;
+      border: 2px solid #444;
+      color: #ccc;
+      padding: 10px 20px;
+      border-radius: 25px;
       font-family: 'Courier New', monospace;
       font-size: 1rem;
       cursor: pointer;
+      z-index: 2001;
+    }
+
+    .animation-close-btn:hover {
+      background: #333;
+    }
+
+    .animation-scene {
+      width: 90%;
+      height: 70%;
+      position: relative;
+      perspective: 800px;
+      background: linear-gradient(180deg, #0a0a2a 0%, #1a0a0a 50%, #0a0a0a 100%);
+      border: 2px solid #333;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .animation-title {
+      font-size: 1.5rem;
+      color: #ff0000;
+      margin-bottom: 20px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      text-shadow: 0 0 20px rgba(255,0,0,0.8);
+    }
+
+    /* Город */
+    .city-building {
+      position: absolute;
+      bottom: 0;
+      width: 8%;
+      background: #111;
+      border: 1px solid #333;
+      transition: all 0.5s;
+    }
+
+    /* Персонажи */
+    .fighter {
+      position: absolute;
+      width: 50px;
+      height: 80px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Courier New', monospace;
+      font-size: 0.6rem;
+      color: #fff;
+      font-weight: bold;
+      text-shadow: 0 0 10px currentColor;
+      transition: all 0.8s cubic-bezier(0.2, 0.9, 0.3, 1);
       z-index: 10;
+    }
+
+    .fighter.pjaty {
+      background: linear-gradient(180deg, #3a3a3a, #0a0a0a);
+      border: 3px solid #ff0000;
+      box-shadow: 0 0 40px rgba(255,0,0,0.8);
+      width: 70px;
+      height: 120px;
+      font-size: 0.9rem;
+      z-index: 20;
+    }
+
+    .fighter.pjaty.ultimate {
+      background: linear-gradient(180deg, #5a1010, #1a0505);
+      box-shadow: 0 0 100px rgba(255,0,0,1);
+      width: 100px;
+      height: 150px;
+      font-size: 1.2rem;
+    }
+
+    .sword {
+      position: absolute;
+      width: 4px;
+      height: 50px;
+      background: #ff0000;
+      box-shadow: 0 0 30px #ff0000;
+      transform-origin: bottom center;
       transition: all 0.3s;
     }
 
-    .close-animation:hover {
-      background: #2a0505;
-      box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+    .sword.swing {
+      transform: rotate(120deg);
+      box-shadow: 0 0 60px #ff0000, 0 0 120px #ff6600;
+    }
+
+    .explosion {
+      position: absolute;
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #ff0000, #ff6600, transparent);
+      animation: explodeAnim 1s ease forwards;
+      z-index: 30;
+    }
+
+    @keyframes explodeAnim {
+      0% { transform: scale(0); opacity: 1; }
+      100% { transform: scale(3); opacity: 0; }
+    }
+
+    .slash-effect {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      border: 3px solid #ff0000;
+      border-radius: 50%;
+      clip-path: polygon(50% 50%, 100% 0, 100% 100%);
+      animation: slashAnim 0.5s ease forwards;
+      z-index: 25;
+    }
+
+    @keyframes slashAnim {
+      0% { transform: rotate(0deg) scale(0); opacity: 1; }
+      100% { transform: rotate(180deg) scale(2); opacity: 0; }
     }
 
     /* Лицо Пятого */
     .character-container {
       position: relative;
-      margin: 0 auto 40px;
-      width: 250px;
-      height: 250px;
-      transition: all var(--transition);
+      margin: 0 auto 30px;
+      width: 200px;
+      height: 200px;
     }
 
     .character {
       position: relative;
       width: 100%;
       height: 100%;
-      transition: all var(--transition);
     }
 
     .character.angry {
@@ -170,277 +241,163 @@
     }
 
     .face {
-      width: 200px;
-      height: 200px;
+      width: 150px;
+      height: 150px;
       background: radial-gradient(circle at 50% 40%, #2a2a2a, #0a0a0a);
       border-radius: 50%;
       margin: 0 auto;
       position: relative;
-      border: 4px solid #444;
+      border: 3px solid #444;
       transition: all var(--transition);
-      box-shadow: 0 0 50px rgba(60, 60, 60, 0.5);
+      box-shadow: 0 0 40px rgba(60, 60, 60, 0.5);
     }
 
     .character.angry .face {
       background: radial-gradient(circle at 50% 40%, #3a0a0a, #1a0505);
       border-color: #ff3333;
-      box-shadow: 0 0 70px rgba(255, 0, 0, 0.7);
+      box-shadow: 0 0 60px rgba(255, 0, 0, 0.7);
     }
 
     .eyes {
       position: absolute;
-      top: 70px;
+      top: 50px;
       left: 50%;
       transform: translateX(-50%);
       display: flex;
-      gap: 35px;
+      gap: 25px;
     }
 
     .eye {
-      width: 20px;
-      height: 20px;
+      width: 15px;
+      height: 15px;
       background: #fff;
       border-radius: 50%;
-      transition: all var(--transition);
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
     }
 
     .character.angry .eye {
       background: #ff0000;
-      box-shadow: 0 0 25px rgba(255, 0, 0, 0.9);
-      width: 22px;
-      height: 14px;
+      box-shadow: 0 0 20px rgba(255, 0, 0, 0.9);
+      width: 16px;
+      height: 10px;
       border-radius: 2px;
     }
 
     .mouth {
       position: absolute;
-      bottom: 45px;
+      bottom: 30px;
       left: 50%;
       transform: translateX(-50%);
-      width: 50px;
-      height: 10px;
+      width: 35px;
+      height: 8px;
       background: #555;
       border-radius: 50%;
-      transition: all var(--transition);
     }
 
     .character.angry .mouth {
-      width: 40px;
-      height: 20px;
+      width: 30px;
+      height: 15px;
       background: #ff0000;
       border-radius: 0;
-      box-shadow: 0 0 20px rgba(255, 0, 0, 0.7);
-    }
-
-    .aura {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 280px;
-      height: 280px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(80, 80, 80, 0.25), transparent 70%);
-      z-index: -1;
-      animation: pulseAura 3s ease-in-out infinite;
-    }
-
-    .character.angry .aura {
-      background: radial-gradient(circle, rgba(255, 0, 0, 0.5), transparent 70%);
-      animation: angryAura 0.4s ease-in-out infinite;
-    }
-
-    @keyframes pulseAura {
-      0%, 100% { transform: translate(-50%, -50%) scale(1); }
-      50% { transform: translate(-50%, -50%) scale(1.15); }
-    }
-
-    @keyframes angryAura {
-      0%, 100% { transform: translate(-50%, -50%) scale(1); }
-      50% { transform: translate(-50%, -50%) scale(1.3); }
     }
 
     .character-name {
-      font-size: 1.5rem;
+      font-size: 1.3rem;
       font-weight: bold;
       color: #aaa;
-      margin-top: 15px;
-      letter-spacing: 0.3em;
+      margin-top: 10px;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
-      transition: all var(--transition);
-    }
-
-    .character.angry ~ .character-name {
-      color: #ff3333;
-      text-shadow: 0 0 30px rgba(255, 0, 0, 0.8);
     }
 
     .speech-bubble {
-      position: relative;
       background: #1a1a1a;
       border: 2px solid #444;
-      border-radius: 20px;
-      padding: 25px;
-      margin: 30px auto 20px;
-      max-width: 600px;
+      border-radius: 15px;
+      padding: 20px;
+      margin: 20px auto;
+      max-width: 500px;
       text-align: left;
-      min-height: 80px;
-      transition: all var(--transition);
-      animation: bubbleIn 0.5s ease;
-    }
-
-    @keyframes bubbleIn {
-      from { opacity: 0; transform: scale(0.8); }
-      to { opacity: 1; transform: scale(1); }
-    }
-
-    .speech-bubble::before {
-      content: '';
-      position: absolute;
-      top: -20px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 0;
-      height: 0;
-      border-left: 15px solid transparent;
-      border-right: 15px solid transparent;
-      border-bottom: 20px solid #444;
+      min-height: 60px;
     }
 
     .speech-bubble.angry {
       border-color: #ff3333;
       background: #1a0505;
-      box-shadow: 0 0 40px rgba(255, 0, 0, 0.5);
-    }
-
-    .speech-bubble.angry::before {
-      border-bottom-color: #ff3333;
+      box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
     }
 
     .character-response {
-      font-size: 1.1rem;
+      font-size: 1rem;
       color: #ddd;
       min-height: 30px;
-      transition: all var(--transition);
-    }
-
-    .speech-bubble.angry .character-response {
-      color: #ff6666;
     }
 
     .chat-history {
       background: rgba(15, 15, 15, 0.8);
       border: 1px solid #333;
-      border-radius: 15px;
-      padding: 20px;
-      margin-top: 20px;
-      max-height: 200px;
+      border-radius: 10px;
+      padding: 15px;
+      margin-top: 15px;
+      max-height: 150px;
       overflow-y: auto;
       text-align: left;
+      font-size: 0.85rem;
     }
 
     .history-message {
-      margin-bottom: 10px;
-      padding: 8px 12px;
-      border-radius: 8px;
-      font-size: 0.9rem;
-    }
-
-    .history-message.user {
-      background: #111;
-      color: #777;
-      border: 1px solid #222;
-    }
-
-    .history-message.character {
-      background: #1a1a1a;
-      color: #999;
-      border: 1px solid #333;
-    }
-
-    .history-message.character.angry-message {
-      background: #1a0505;
-      color: #ff6666;
-      border: 1px solid #ff3333;
+      margin-bottom: 8px;
+      padding: 6px 10px;
+      border-radius: 6px;
     }
 
     .input-container {
       display: flex;
-      gap: 10px;
-      margin-top: 25px;
+      gap: 8px;
+      margin-top: 20px;
     }
 
     .chat-input {
       flex: 1;
-      padding: 14px 20px;
+      padding: 12px 18px;
       background: #111;
       border: 2px solid #333;
-      border-radius: 30px;
+      border-radius: 25px;
       color: #ccc;
       font-family: 'Courier New', monospace;
-      font-size: 1rem;
-      transition: all var(--transition);
+      font-size: 0.9rem;
     }
 
     .chat-input:focus {
       outline: none;
-      border-color: #666;
-      box-shadow: 0 0 25px rgba(80, 80, 80, 0.4);
+      border-color: #555;
     }
 
     .send-btn {
-      padding: 14px 28px;
+      padding: 12px 22px;
       background: #1a1a1a;
       border: 2px solid #444;
-      border-radius: 30px;
+      border-radius: 25px;
       color: #ccc;
       font-family: 'Courier New', monospace;
-      font-size: 1rem;
       cursor: pointer;
-      transition: all var(--transition);
     }
 
     .send-btn:hover {
       background: #333;
-      border-color: #666;
-      transform: scale(1.05);
     }
 
     .hint-text {
-      color: #444;
-      font-size: 0.75rem;
-      margin-top: 15px;
-      font-style: italic;
-    }
-
-    .keyboard-hint {
-      color: #555;
-      font-size: 0.85rem;
-      margin-top: 20px;
-      padding: 10px;
-      border: 1px solid #333;
-      border-radius: 10px;
-      background: #0a0a0a;
-    }
-
-    .keyboard-hint span {
-      color: #888;
-      font-weight: bold;
-      background: #1a1a1a;
-      padding: 3px 8px;
-      border-radius: 5px;
-      border: 1px solid #444;
-      margin: 0 5px;
+      color: #333;
+      font-size: 0.7rem;
+      margin-top: 10px;
     }
 
     .title {
-      font-size: 2rem;
-      font-weight: bold;
+      font-size: 1.8rem;
       color: #666;
-      margin-bottom: 30px;
-      letter-spacing: 0.5em;
-      text-transform: uppercase;
+      margin-bottom: 20px;
+      letter-spacing: 0.4em;
     }
   </style>
 </head>
@@ -449,11 +406,11 @@
     <div class="loading-text">ЗАГРУЗКА...</div>
   </div>
 
-  <!-- 3D Animation Overlay -->
+  <!-- 3D анимация -->
   <div class="animation-overlay" id="animationOverlay">
+    <button class="animation-close-btn" onclick="closeAnimation()">✕ Закрыть</button>
     <div class="animation-title" id="animationTitle"></div>
-    <div class="animation-canvas" id="animationCanvas"></div>
-    <button class="close-animation" onclick="closeAnimation()">ЗАКРЫТЬ</button>
+    <div class="animation-scene" id="animationScene"></div>
   </div>
 
   <div class="container">
@@ -461,7 +418,6 @@
 
     <div class="character-container">
       <div class="character" id="character">
-        <div class="aura"></div>
         <div class="face">
           <div class="eyes">
             <div class="eye"></div>
@@ -474,24 +430,15 @@
     </div>
 
     <div class="speech-bubble" id="speechBubble">
-      <div class="character-response" id="characterResponse">
-        Приветствую, странник...
-      </div>
+      <div class="character-response" id="characterResponse">Приветствую...</div>
     </div>
 
     <div class="input-container">
-      <input type="text" class="chat-input" id="chatInput" placeholder="Спроси Пятого о Бренленде..." onkeypress="if(event.key === 'Enter') sendMessage()">
+      <input type="text" class="chat-input" id="chatInput" placeholder="Спроси Пятого..." onkeypress="if(event.key === 'Enter') sendMessage()">
       <button class="send-btn" onclick="sendMessage()">Спросить</button>
     </div>
 
-    <div class="hint-text">
-      Спроси про: симуляцию, лор, скайбокс, полубог, создателя, игроков
-    </div>
-
-    <div class="keyboard-hint">
-      🔥 Секретные анимации: <span>CTRL + X</span> — Пятый убивает Xsioder'а | <span>CTRL + F</span> — Битва против всех
-    </div>
-
+    <div class="hint-text">Спроси про: симуляцию, лор, скайбокс, игроков</div>
     <div class="chat-history" id="chatHistory"></div>
   </div>
 
@@ -504,144 +451,62 @@
       const chatInput = document.getElementById('chatInput');
       const chatHistory = document.getElementById('chatHistory');
       const animationOverlay = document.getElementById('animationOverlay');
-      const animationCanvas = document.getElementById('animationCanvas');
+      const animationScene = document.getElementById('animationScene');
       const animationTitle = document.getElementById('animationTitle');
 
       let isAngry = false;
-      let glitchTimeout = null;
-      let animationRunning = false;
+      let animationActive = false;
 
-      // База знаний Пятого
+      // База знаний
       const knowledge = {
-        'симуляция': {
-          keywords: ['симуляц', 'симуляция', 'реальность', 'матрица'],
-          response: 'Всё верно. Бренленд — это симуляция. Я, Пятый, — полубог этой симуляции. Всё, что ты видишь, всё, что ты чувствуешь — часть великой программы, созданной для тех, кто ищет истину.',
-          angry: false
-        },
-        'скайбокс': {
-          keywords: ['скайбокс', 'небо', 'купол', 'граница'],
-          response: 'Скайбокс — это граница нашей симуляции. За ним — пустота, из которой я черпаю свою силу. Игроки живут под этим куполом, не подозревая о том, что находится за его пределами.',
-          angry: false
-        },
-        'полубог': {
-          keywords: ['полубог', 'бог', 'пятый', 'сила'],
-          response: 'Я — Пятый, полубог этой симуляции. Не всемогущий, но обладающий знанием о том, как устроен этот мир. Я здесь, чтобы направлять тех, кто ищет понимание.',
-          angry: false
-        },
-        'создатель': {
-          keywords: ['создатель', 'ксиодер', 'xsioder', 'основатель', 'творец'],
-          response: 'Xsioder — великий создатель этой симуляции. Он написал код, который породил весь Бренленд. Грибы Грибочки! — его легендарная фраза, ставшая ключом к пониманию мира.',
-          angry: false
-        },
-        'тех админ': {
-          keywords: ['тех', 'админ', 'avrairut', 'тех админ', 'технический'],
-          response: 'AvraiRut — хранитель кода симуляции. Он следит за тем, чтобы программа работала без сбоев. Если что-то ломается — он чинит это. Его разум острее любого меча.',
-          angry: false
-        },
-        'фундример': {
-          keywords: ['фундример', 'fundreamer', 'сайт', 'портал'],
-          response: 'FunDreamer — создатель этого портала. Он построил мост между мирами, чтобы каждый мог общаться со мной. Добрейшая душа в симуляции. Дважды подумай прежде чем писать ему!',
-          angry: false
-        },
-        'фланалла': {
-          keywords: ['фланалла', 'flanalla', 'девушка', 'женщина'],
-          response: 'Flanalla — единственная девушка в симуляции. Она несёт свет и заботу каждому игроку. Не мы такие, жизнь такая...',
-          angry: false
-        },
-        'вова': {
-          keywords: ['вова', 'vova', 'электричество', 'механик', 'тесла'],
-          response: 'Vova — исследователь энергии симуляции. Он изучает электричество через механизмы Minecraft. Ох Никола Тесла...',
-          angry: false
-        },
-        'абибек': {
-          keywords: ['абибек', 'abibek', 'неплохой'],
-          response: 'Abibek... Неплохой игрок. Увы.',
-          angry: false
-        },
-        'баунти': {
-          keywords: ['баунти', 'bounty', 'повар', 'еда'],
-          response: 'Bounty — повар симуляции. Его блюда способны восстановить силы любого игрока. Но не злите его...',
-          angry: true
-        },
-        'кто ты': {
-          keywords: ['кто ты', 'ты кто', 'что ты'],
-          response: 'Я — Пятый, полубог этой симуляции. Я был создан вместе с Бренлендом и знаю все его тайны. Спрашивай, смертный.',
-          angry: false
-        },
-        'привет': {
-          keywords: ['привет', 'здравствуй', 'хай', 'hello', 'здоров'],
-          response: 'И снова здравствуй, путник симуляции. Что ты хочешь узнать о Бренленде?',
-          angry: false
-        },
-        'грибы': {
-          keywords: ['грибы', 'грибочки'],
-          response: 'Грибы Грибочки! — ключ к пониманию всей симуляции. Это не просто слова, это код, открывающий скрытые уровни Бренленда.',
-          angry: false
-        },
-        'тайна': {
-          keywords: ['тайна', 'секрет', 'скрытое', 'загадка'],
-          response: 'В симуляции есть уровни, о которых не знают даже игроки. Скайбокс скрывает больше, чем кажется. Ищи, и код откроется тебе...',
-          angry: false
-        },
-        'игроки': {
-          keywords: ['игроки', 'участники', 'люди', 'кто играет'],
-          response: 'В симуляции Бренленда есть избранные: Xsioder, AvraiRut, FunDreamer, Flanalla, Vova, Abibek и Bounty. Каждый из них — часть кода, часть великой программы.',
-          angry: false
-        }
+        'симуляция': { keywords: ['симуляц', 'симуляция', 'реальность'], response: 'Бренленд — это симуляция. Я — полубог этой симуляции.', angry: false },
+        'скайбокс': { keywords: ['скайбокс', 'небо', 'купол'], response: 'Скайбокс — граница симуляции. За ним — пустота.', angry: false },
+        'создатель': { keywords: ['создатель', 'ксиодер', 'xsioder'], response: 'Xsioder — создатель симуляции. Грибы Грибочки!', angry: false },
+        'тех админ': { keywords: ['тех', 'админ', 'avrairut'], response: 'AvraiRut — хранитель кода симуляции.', angry: false },
+        'привет': { keywords: ['привет', 'здравствуй'], response: 'Здравствуй, путник. Что хочешь узнать?', angry: false },
+        'кто ты': { keywords: ['кто ты'], response: 'Я — Пятый, полубог симуляции.', angry: false },
+        'игроки': { keywords: ['игроки'], response: 'Избранные: Xsioder, AvraiRut, FunDreamer, Flanalla, Vova, Abibek, Bounty.', angry: false }
       };
 
-      const insultWords = [
-        'дурак', 'тупой', 'глупый', 'идиот', 'ненавижу', 
-        'плохой', 'ужасный', 'отвратительный', 'бред', 'чушь',
-        'заткнись', 'молчи', 'надоел', 'бесишь', 'глупец'
-      ];
+      const insultWords = ['дурак', 'тупой', 'идиот', 'ненавижу', 'заткнись', 'бесишь'];
 
-      function getCharacterResponse(input) {
-        const lowerInput = input.toLowerCase();
-        
-        if (insultWords.some(word => lowerInput.includes(word))) {
-          return {
-            text: '... Ты смеешь оскорблять полубога?! Я — Пятый, хранитель симуляции! Ты не достоин знаний Бренленда!',
-            angry: true
-          };
+      function getResponse(input) {
+        const lower = input.toLowerCase();
+        if (insultWords.some(w => lower.includes(w))) {
+          return { text: 'Ты смеешь оскорблять полубога?!', angry: true };
         }
-
         for (const [key, data] of Object.entries(knowledge)) {
-          if (data.keywords.some(keyword => lowerInput.includes(keyword))) {
-            return { text: data.response, angry: data.angry };
-          }
+          if (data.keywords.some(k => lower.includes(k))) return { text: data.response, angry: data.angry };
         }
-
-        return {
-          text: 'Интересный вопрос... Спроси меня о симуляции, лоре, скайбоксе или игроках Бренленда.',
-          angry: false
-        };
+        return { text: 'Спроси о симуляции, лоре или игроках.', angry: false };
       }
 
-      function playSound(soundFile) {
-        const audio = new Audio(soundFile);
-        audio.volume = 0.7;
-        audio.play().catch(e => console.log('Аудио не может быть воспроизведено'));
+      function playSound(file) {
+        const audio = new Audio(file);
+        audio.volume = 0.6;
+        audio.play().catch(() => {});
       }
 
-      function addToHistory(text, type, isAngry = false) {
+      function addHistory(text, type, angry = false) {
         const div = document.createElement('div');
-        div.className = `history-message ${type}`;
-        if (type === 'character' && isAngry) div.classList.add('angry-message');
+        div.className = 'history-message';
+        div.style.cssText = type === 'user' 
+          ? 'background:#111;color:#777;border:1px solid #222;'
+          : angry 
+            ? 'background:#1a0505;color:#ff6666;border:1px solid #ff3333;'
+            : 'background:#1a1a1a;color:#999;border:1px solid #333;';
         div.textContent = (type === 'user' ? 'Вы: ' : 'Пятый: ') + text;
         chatHistory.appendChild(div);
         chatHistory.scrollTop = chatHistory.scrollHeight;
       }
 
-      function setCharacterAngry(angry) {
+      function setAngry(angry) {
         if (isAngry === angry) return;
         isAngry = angry;
-        
         if (angry) {
           character.classList.add('angry');
           characterName.textContent = 'ПЯТЫЙ (РАЗДРАЖЁН)';
           speechBubble.classList.add('angry');
-          if (glitchTimeout) clearTimeout(glitchTimeout);
           playSound('glitch.mp3');
         } else {
           character.classList.remove('angry');
@@ -650,354 +515,202 @@
         }
       }
 
-      function typewriterEffect(text, isAngry, callback) {
+      function typewriter(text, angry, callback) {
         characterResponse.textContent = '';
         const words = text.split(' ');
-        let wordIndex = 0;
-        
-        function typeNextWord() {
-          if (wordIndex < words.length) {
-            characterResponse.textContent += (wordIndex > 0 ? ' ' : '') + words[wordIndex];
+        let i = 0;
+        function next() {
+          if (i < words.length) {
+            characterResponse.textContent += (i > 0 ? ' ' : '') + words[i];
             playSound('say.wav');
-            wordIndex++;
-            setTimeout(typeNextWord, 200);
-          } else if (callback) {
-            callback();
-          }
+            i++;
+            setTimeout(next, 150);
+          } else if (callback) callback();
         }
-        
-        typeNextWord();
+        next();
       }
-
-      // 3D Animation Functions
-      function createSwordFightAnimation() {
-        animationRunning = true;
-        animationOverlay.classList.add('active');
-        animationTitle.textContent = 'ПЯТЫЙ vs XSIODER';
-        
-        // Three.js сцена
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-        
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setClearColor(0x000000, 1);
-        animationCanvas.appendChild(renderer.domElement);
-        
-        camera.position.z = 8;
-        camera.position.y = 2;
-        
-        // Свет
-        const ambientLight = new THREE.AmbientLight(0x333333);
-        scene.add(ambientLight);
-        
-        const pointLight = new THREE.PointLight(0xff0000, 2, 20);
-        pointLight.position.set(0, 3, 0);
-        scene.add(pointLight);
-        
-        // Фигуры-бойцы
-        const fighters = [];
-        
-        // Пятый (красный)
-        const fifthGeometry = new THREE.CapsuleGeometry(0.6, 1.5, 4, 8);
-        const fifthMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000, emissive: 0x440000 });
-        const fifth = new THREE.Mesh(fifthGeometry, fifthMaterial);
-        fifth.position.set(-3, 1, 0);
-        scene.add(fifth);
-        fighters.push({ mesh: fifth, name: 'Пятый', hp: 100 });
-        
-        // Меч Пятого
-        const swordGeometry = new THREE.BoxGeometry(0.1, 2, 0.1);
-        const swordMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0x333333 });
-        const fifthSword = new THREE.Mesh(swordGeometry, swordMaterial);
-        fifthSword.position.set(-3, 2.5, 0.5);
-        scene.add(fifthSword);
-        
-        // Xsioder (синий)
-        const xsioderGeometry = new THREE.CapsuleGeometry(0.5, 1.3, 4, 8);
-        const xsioderMaterial = new THREE.MeshStandardMaterial({ color: 0x4444ff, emissive: 0x000044 });
-        const xsioder = new THREE.Mesh(xsioderGeometry, xsioderMaterial);
-        xsioder.position.set(3, 0.8, 0);
-        scene.add(xsioder);
-        fighters.push({ mesh: xsioder, name: 'Xsioder', hp: 50 });
-        
-        // Меч Xsioder'а
-        const xsioderSword = new THREE.Mesh(swordGeometry, new THREE.MeshStandardMaterial({ color: 0x8888ff, emissive: 0x111133 }));
-        xsioderSword.position.set(3, 2.2, 0.5);
-        scene.add(xsioderSword);
-        
-        // Частицы
-        const particles = new THREE.BufferGeometry();
-        const particleCount = 200;
-        const positions = new Float32Array(particleCount * 3);
-        for (let i = 0; i < particleCount * 3; i++) {
-          positions[i] = (Math.random() - 0.5) * 10;
-        }
-        particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-        const particleMaterial = new THREE.PointsMaterial({ color: 0xff4444, size: 0.05 });
-        const particleSystem = new THREE.Points(particles, particleMaterial);
-        scene.add(particleSystem);
-        
-        let frame = 0;
-        
-        function animate() {
-          if (!animationRunning) return;
-          
-          requestAnimationFrame(animate);
-          frame++;
-          
-          // Анимация боя
-          const time = frame * 0.05;
-          
-          fifth.position.x = -3 + Math.sin(time * 2) * 0.5;
-          fifth.position.y = 1 + Math.abs(Math.sin(time * 3)) * 0.3;
-          fifthSword.position.x = fifth.position.x;
-          fifthSword.rotation.z = Math.sin(time * 5) * 0.5;
-          
-          xsioder.position.x = 3 - Math.sin(time * 1.5) * 0.5;
-          xsioder.position.y = 0.8 + Math.abs(Math.cos(time * 2)) * 0.3;
-          xsioderSword.position.x = xsioder.position.x;
-          xsioderSword.rotation.z = -Math.sin(time * 4) * 0.5;
-          
-          pointLight.position.x = Math.sin(time) * 3;
-          
-          particleSystem.rotation.y += 0.01;
-          
-          // Эффект удара
-          if (Math.abs(fifth.position.x - xsioder.position.x) < 1.5) {
-            pointLight.intensity = 5;
-            // Уменьшаем HP Xsioder'а
-            xsioderMaterial.emissive.setHex(0x440000);
-          } else {
-            pointLight.intensity = 2;
-            xsioderMaterial.emissive.setHex(0x000044);
-          }
-          
-          // Анимация смерти Xsioder'а через 3 секунды
-          if (frame > 180) {
-            xsioder.position.y -= 0.05;
-            xsioder.rotation.z += 0.1;
-            xsioderMaterial.color.setHex(0x333333);
-            xsioderMaterial.emissive.setHex(0x000000);
-          }
-          
-          camera.position.x = Math.sin(time * 0.5) * 1;
-          camera.lookAt(0, 1, 0);
-          
-          renderer.render(scene, camera);
-        }
-        
-        animate();
-      }
-
-      function createTeamBattleAnimation() {
-        animationRunning = true;
-        animationOverlay.classList.add('active');
-        animationTitle.textContent = 'ПЯТЫЙ vs ВСЕ';
-        
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-        
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setClearColor(0x000000, 1);
-        animationCanvas.appendChild(renderer.domElement);
-        
-        camera.position.set(0, 5, 12);
-        camera.lookAt(0, 1, 0);
-        
-        const ambientLight = new THREE.AmbientLight(0x333333);
-        scene.add(ambientLight);
-        
-        const redLight = new THREE.PointLight(0xff0000, 3, 25);
-        redLight.position.set(0, 5, 0);
-        scene.add(redLight);
-        
-        // Пятый (большой, красный)
-        const fifthGeometry = new THREE.CapsuleGeometry(0.8, 2, 4, 8);
-        const fifthMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000, emissive: 0x550000 });
-        const fifth = new THREE.Mesh(fifthGeometry, fifthMaterial);
-        fifth.position.set(0, 1.5, 0);
-        scene.add(fifth);
-        
-        // Меч Пятого (большой)
-        const bigSwordGeometry = new THREE.BoxGeometry(0.15, 3, 0.15);
-        const bigSwordMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0x444444 });
-        const bigSword = new THREE.Mesh(bigSwordGeometry, bigSwordMaterial);
-        bigSword.position.set(0, 3.5, 1);
-        scene.add(bigSword);
-        
-        // Противники
-        const enemies = [];
-        const enemyNames = ['AvraiRut', 'FunDreamer', 'Flanalla', 'Abibek', 'Bounty'];
-        const enemyColors = [0x8844ff, 0x22cc44, 0xaa44aa, 0x44aa44, 0xcc8844];
-        
-        enemyNames.forEach((name, index) => {
-          const angle = (index / enemyNames.length) * Math.PI * 2;
-          const x = Math.cos(angle) * 4;
-          const z = Math.sin(angle) * 4;
-          
-          const enemyGeometry = new THREE.CapsuleGeometry(0.45, 1.2, 4, 8);
-          const enemyMaterial = new THREE.MeshStandardMaterial({ 
-            color: enemyColors[index], 
-            emissive: enemyColors[index],
-            emissiveIntensity: 0.3
-          });
-          const enemy = new THREE.Mesh(enemyGeometry, enemyMaterial);
-          enemy.position.set(x, 0.8, z);
-          scene.add(enemy);
-          
-          // Меч врага
-          const enemySwordGeometry = new THREE.BoxGeometry(0.08, 1.5, 0.08);
-          const enemySword = new THREE.Mesh(enemySwordGeometry, new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0x333333 }));
-          enemySword.position.set(x, 2, z);
-          scene.add(enemySword);
-          
-          enemies.push({ 
-            mesh: enemy, 
-            sword: enemySword, 
-            name: name, 
-            hp: 30, 
-            alive: true,
-            baseX: x,
-            baseZ: z,
-            angle: angle
-          });
-        });
-        
-        // Частицы
-        const particles = new THREE.BufferGeometry();
-        const particleCount = 500;
-        const positions = new Float32Array(particleCount * 3);
-        for (let i = 0; i < particleCount * 3; i++) {
-          positions[i] = (Math.random() - 0.5) * 15;
-        }
-        particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-        const particleMaterial = new THREE.PointsMaterial({ color: 0xff4444, size: 0.04 });
-        const particleSystem = new THREE.Points(particles, particleMaterial);
-        scene.add(particleSystem);
-        
-        let frame = 0;
-        let enemiesKilled = 0;
-        
-        function animate() {
-          if (!animationRunning) return;
-          
-          requestAnimationFrame(animate);
-          frame++;
-          
-          const time = frame * 0.03;
-          
-          // Анимация Пятого
-          fifth.rotation.y += 0.02;
-          fifth.position.y = 1.5 + Math.abs(Math.sin(time * 2)) * 0.5;
-          bigSword.rotation.z = Math.sin(time * 4) * 0.8;
-          bigSword.rotation.x = Math.cos(time * 3) * 0.5;
-          
-          // Анимация врагов
-          enemies.forEach((enemy, index) => {
-            if (enemy.alive) {
-              // Движение к Пятому
-              const targetX = Math.cos(time * 2 + enemy.angle) * 2;
-              const targetZ = Math.sin(time * 2 + enemy.angle) * 2;
-              
-              enemy.mesh.position.x = enemy.baseX + (targetX - enemy.baseX) * Math.abs(Math.sin(time));
-              enemy.mesh.position.z = enemy.baseZ + (targetZ - enemy.baseZ) * Math.abs(Math.cos(time));
-              enemy.mesh.position.y = 0.8 + Math.abs(Math.sin(time * 3 + index)) * 0.3;
-              
-              enemy.sword.position.x = enemy.mesh.position.x;
-              enemy.sword.position.z = enemy.mesh.position.z;
-              enemy.sword.rotation.z = Math.sin(time * 5 + index) * 0.6;
-              
-              // Проверка убийства
-              if (frame > 100 + index * 80) {
-                enemy.alive = false;
-                enemiesKilled++;
-                enemy.mesh.material.color.setHex(0x333333);
-                enemy.mesh.material.emissive.setHex(0x000000);
-                enemy.mesh.position.y -= 0.5;
-                enemy.mesh.rotation.z += 0.5;
-                
-                // Вспышка при убийстве
-                redLight.intensity = 8;
-                setTimeout(() => { redLight.intensity = 3; }, 100);
-              }
-            } else {
-              enemy.mesh.position.y -= 0.02;
-            }
-          });
-          
-          // Вращение камеры
-          camera.position.x = Math.sin(time * 0.5) * 8;
-          camera.position.z = Math.cos(time * 0.5) * 8;
-          camera.lookAt(0, 1.5, 0);
-          
-          // Частицы
-          particleSystem.rotation.y += 0.005;
-          particleSystem.rotation.x += 0.003;
-          
-          redLight.position.x = fifth.position.x;
-          redLight.position.y = fifth.position.y;
-          
-          renderer.render(scene, camera);
-        }
-        
-        animate();
-      }
-
-      // Закрытие анимации
-      window.closeAnimation = function() {
-        animationRunning = false;
-        animationOverlay.classList.remove('active');
-        animationCanvas.innerHTML = '';
-      };
-
-      // Обработка клавиш
-      document.addEventListener('keydown', function(e) {
-        if (e.ctrlKey && e.key === 'x') {
-          e.preventDefault();
-          if (!animationRunning) {
-            createSwordFightAnimation();
-          }
-        }
-        if (e.ctrlKey && e.key === 'f') {
-          e.preventDefault();
-          if (!animationRunning) {
-            createTeamBattleAnimation();
-          }
-        }
-      });
 
       window.sendMessage = function() {
         const input = chatInput.value.trim();
-        if (!input) return;
-
-        addToHistory(input, 'user');
+        if (!input || animationActive) return;
+        addHistory(input, 'user');
         chatInput.value = '';
-
-        const response = getCharacterResponse(input);
-
+        const resp = getResponse(input);
         setTimeout(() => {
-          if (response.angry) {
-            setCharacterAngry(true);
-            typewriterEffect(response.text, true, () => {
-              addToHistory(response.text, 'character', true);
-              glitchTimeout = setTimeout(() => {
-                setCharacterAngry(false);
-              }, 4000);
+          if (resp.angry) {
+            setAngry(true);
+            typewriter(resp.text, true, () => {
+              addHistory(resp.text, 'character', true);
+              setTimeout(() => setAngry(false), 3000);
             });
           } else {
-            setCharacterAngry(false);
-            typewriterEffect(response.text, false, () => {
-              addToHistory(response.text, 'character');
-            });
+            setAngry(false);
+            typewriter(resp.text, false, () => addHistory(resp.text, 'character'));
           }
-        }, 400);
+        }, 300);
       };
 
+      // 3D анимации
+      function createCity(scene) {
+        for (let i = 0; i < 12; i++) {
+          const building = document.createElement('div');
+          building.className = 'city-building';
+          building.style.left = (i * 8) + '%';
+          building.style.height = (20 + Math.random() * 40) + '%';
+          building.style.transform = 'translateZ(-30px)';
+          scene.appendChild(building);
+        }
+      }
+
+      function createFighter(name, color, x, y) {
+        const el = document.createElement('div');
+        el.className = 'fighter';
+        el.style.left = x + '%';
+        el.style.top = y + '%';
+        el.style.background = `linear-gradient(180deg, ${color}, #0a0a0a)`;
+        el.style.border = `2px solid ${color}`;
+        el.style.color = color;
+        el.textContent = name;
+        return el;
+      }
+
+      function createExplosion(x, y) {
+        const exp = document.createElement('div');
+        exp.className = 'explosion';
+        exp.style.left = x + '%';
+        exp.style.top = y + '%';
+        return exp;
+      }
+
+      function showKillAnimation() {
+        animationActive = true;
+        animationOverlay.classList.add('open');
+        animationTitle.textContent = 'ПЯТЫЙ УНИЧТОЖАЕТ XSIODER';
+        animationScene.innerHTML = '';
+        createCity(animationScene);
+
+        const pjaty = createFighter('ПЯТЫЙ', '#ff0000', 20, 40);
+        pjaty.classList.add('pjaty');
+        const xsioder = createFighter('XSIODER', '#ff6b2b', 60, 40);
+
+        animationScene.appendChild(pjaty);
+        animationScene.appendChild(xsioder);
+
+        // Движение Пятого
+        setTimeout(() => {
+          pjaty.style.left = '45%';
+          pjaty.style.transform = 'translateZ(60px)';
+          playSound('glitch.mp3');
+        }, 500);
+
+        // Атака
+        setTimeout(() => {
+          const slash = document.createElement('div');
+          slash.className = 'slash-effect';
+          slash.style.left = '50%';
+          slash.style.top = '30%';
+          animationScene.appendChild(slash);
+          playSound('say.wav');
+        }, 1500);
+
+        // Уничтожение Xsioder
+        setTimeout(() => {
+          xsioder.style.opacity = '0';
+          xsioder.style.transform = 'rotate(90deg) translateZ(-50px)';
+          animationScene.appendChild(createExplosion(55, 30));
+          playSound('glitch.mp3');
+        }, 2500);
+
+        // Финал
+        setTimeout(() => {
+          pjaty.classList.add('ultimate');
+          pjaty.style.left = '40%';
+        }, 3500);
+      }
+
+      function showBattleAnimation() {
+        animationActive = true;
+        animationOverlay.classList.add('open');
+        animationTitle.textContent = 'БИТВА: ПЯТЫЙ ПРОТИВ ВСЕХ';
+        animationScene.innerHTML = '';
+        createCity(animationScene);
+
+        const pjaty = createFighter('ПЯТЫЙ', '#ff0000', 70, 30);
+        pjaty.classList.add('pjaty');
+        animationScene.appendChild(pjaty);
+
+        const fighters = [
+          { name: 'AVRAIRUT', color: '#a855f7', x: 10 },
+          { name: 'FUNDREAMER', color: '#22c55e', x: 20 },
+          { name: 'FLANALLA', color: '#6b21a8', x: 30 },
+          { name: 'ABIBEK', color: '#15803d', x: 40 },
+          { name: 'BOUNTY', color: '#3b82f6', x: 50 }
+        ];
+
+        fighters.forEach((f, i) => {
+          const fighter = createFighter(f.name, f.color, f.x, 45);
+          animationScene.appendChild(fighter);
+
+          // Атака на Пятого
+          setTimeout(() => {
+            fighter.style.left = (f.x + 15) + '%';
+            fighter.style.transform = 'translateZ(40px)';
+            playSound('say.wav');
+          }, 800 + i * 600);
+
+          // Поражение игрока
+          setTimeout(() => {
+            fighter.style.opacity = '0';
+            fighter.style.transform = 'rotate(180deg) translateZ(-30px)';
+            animationScene.appendChild(createExplosion(f.x + 15, 35));
+            playSound('glitch.mp3');
+          }, 4000 + i * 800);
+        });
+
+        // Пятый побеждает
+        setTimeout(() => {
+          pjaty.classList.add('ultimate');
+          pjaty.style.left = '30%';
+          pjaty.style.transform = 'translateZ(100px)';
+          playSound('glitch.mp3');
+        }, 6000);
+
+        // Финальный взрыв
+        setTimeout(() => {
+          animationScene.appendChild(createExplosion(30, 20));
+          animationScene.appendChild(createExplosion(50, 40));
+          playSound('glitch.mp3');
+        }, 8000);
+      }
+
+      window.closeAnimation = function() {
+        animationOverlay.classList.remove('open');
+        animationScene.innerHTML = '';
+        animationActive = false;
+      };
+
+      // Секретные клавиши
+      document.addEventListener('keydown', function(e) {
+        if (animationActive) return;
+        
+        if (e.shiftKey && (e.key === 'X' || e.key === 'х')) {
+          e.preventDefault();
+          showKillAnimation();
+        }
+        
+        if (e.shiftKey && (e.key === 'F' || e.key === 'а')) {
+          e.preventDefault();
+          showBattleAnimation();
+        }
+
+        if (e.key === 'Escape') {
+          closeAnimation();
+        }
+      });
+
       setTimeout(() => {
-        typewriterEffect('Приветствую, странник. Я — Пятый, полубог симуляции Бренленда. Спрашивай меня о лоре, скайбоксе или игроках...', false, null);
-      }, 2000);
+        typewriter('Приветствую, странник. Я — Пятый, полубог симуляции Бренленда...', false, null);
+      }, 1500);
 
       chatInput.focus();
     })();
