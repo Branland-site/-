@@ -1,140 +1,587 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Мой мини-сайт</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#000000">
+  <title>???</title>
   <style>
     :root {
-      --primary: #4f46e5;
-      --bg: #f8fafc;
-      --text: #1e293b;
-      --card: #ffffff;
+      --bg: #000000;
+      --text: #cccccc;
+      --text-bright: #ffffff;
+      --accent: #4a4a4a;
+      --red: #ff0000;
+      --transition: 0.3s ease;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
 
     body {
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background-color: var(--bg);
+      font-family: 'Courier New', monospace;
+      background: var(--bg);
       color: var(--text);
       line-height: 1.6;
-      padding: 2rem;
-    }
-
-    .container {
-      max-width: 700px;
-      margin: 0 auto;
-    }
-
-    header {
-      text-align: center;
-      margin-bottom: 2.5rem;
-    }
-
-    h1 {
-      font-size: 2.25rem;
-      margin-bottom: 0.5rem;
-    }
-
-    p.subtitle {
-      color: #64748b;
-      font-size: 1.1rem;
-    }
-
-    .card {
-      background: var(--card);
-      padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    }
-
-    .features {
-      margin-top: 1.5rem;
-    }
-
-    .feature-item {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin-bottom: 0.75rem;
-    }
-
-    .icon {
-      width: 24px;
-      height: 24px;
-      background: #e2e8f0;
-      color: #475569;
-      border-radius: 6px;
+      min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 50% 40%, rgba(30, 30, 30, 0.8) 0%, transparent 70%),
+        radial-gradient(circle at 50% 50%, #0a0a0a 0%, #000000 100%);
+    }
+
+    .container {
+      width: min(800px, 95%);
+      margin: 0 auto;
+      padding: 30px 20px;
+      text-align: center;
+    }
+
+    /* Персонаж */
+    .character-container {
+      position: relative;
+      margin: 0 auto 30px;
+      width: 200px;
+      height: 250px;
+      transition: all var(--transition);
+    }
+
+    .character {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: all var(--transition);
+      filter: drop-shadow(0 0 20px rgba(80, 80, 80, 0.5));
+    }
+
+    .character.angry {
+      filter: drop-shadow(0 0 40px rgba(255, 0, 0, 0.7));
+      animation: angryShake 0.3s ease-in-out infinite;
+    }
+
+    @keyframes angryShake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-3px); }
+      75% { transform: translateX(3px); }
+    }
+
+    /* Голова */
+    .head {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #3a3a3a, #1a1a1a);
+      border-radius: 50%;
+      margin: 0 auto;
+      position: relative;
+      border: 3px solid #555;
+      transition: all var(--transition);
+    }
+
+    .character.angry .head {
+      background: linear-gradient(135deg, #5a1010, #2a0505);
+      border-color: #ff3333;
+    }
+
+    /* Глаза */
+    .eyes {
+      position: absolute;
+      top: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 15px;
+    }
+
+    .eye {
+      width: 12px;
+      height: 12px;
+      background: #fff;
+      border-radius: 50%;
+      transition: all var(--transition);
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    }
+
+    .character.angry .eye {
+      background: #ff0000;
+      box-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
+      width: 14px;
+      height: 10px;
+      border-radius: 0;
+    }
+
+    /* Рот */
+    .mouth {
+      position: absolute;
+      bottom: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 30px;
+      height: 6px;
+      background: #555;
+      border-radius: 50%;
+      transition: all var(--transition);
+    }
+
+    .character.angry .mouth {
+      width: 25px;
+      height: 12px;
+      background: #ff0000;
+      border-radius: 0;
+      box-shadow: 0 0 10px rgba(255, 0, 0, 0.6);
+    }
+
+    /* Тело */
+    .body {
+      width: 120px;
+      height: 150px;
+      background: linear-gradient(180deg, #3a3a3a, #1a1a1a);
+      margin: -10px auto 0;
+      border-radius: 30px 30px 10px 10px;
+      border: 3px solid #555;
+      position: relative;
+      transition: all var(--transition);
+    }
+
+    .character.angry .body {
+      background: linear-gradient(180deg, #5a1010, #2a0505);
+      border-color: #ff3333;
+    }
+
+    /* Руки */
+    .arms {
+      position: absolute;
+      top: 40px;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      padding: 0 -20px;
+    }
+
+    .arm {
+      width: 25px;
+      height: 80px;
+      background: #3a3a3a;
+      border-radius: 20px;
+      border: 2px solid #555;
+      transition: all var(--transition);
+    }
+
+    .arm.left {
+      margin-left: -15px;
+    }
+
+    .arm.right {
+      margin-right: -15px;
+    }
+
+    .character.angry .arm {
+      background: #5a1010;
+      border-color: #ff3333;
+    }
+
+    /* Свечение ауры */
+    .aura {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 250px;
+      height: 250px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(80, 80, 80, 0.2), transparent 70%);
+      z-index: -1;
+      transition: all var(--transition);
+      animation: pulseAura 3s ease-in-out infinite;
+    }
+
+    .character.angry .aura {
+      background: radial-gradient(circle, rgba(255, 0, 0, 0.4), transparent 70%);
+      animation: angryAura 0.5s ease-in-out infinite;
+    }
+
+    @keyframes pulseAura {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); }
+      50% { transform: translate(-50%, -50%) scale(1.1); }
+    }
+
+    @keyframes angryAura {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); }
+      50% { transform: translate(-50%, -50%) scale(1.2); }
+    }
+
+    /* Имя персонажа */
+    .character-name {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #aaa;
+      margin-bottom: 10px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      transition: all var(--transition);
+    }
+
+    .character.angry + .character-name {
+      color: #ff3333;
+      text-shadow: 0 0 20px rgba(255, 0, 0, 0.6);
+    }
+
+    /* Чат */
+    .chat-container {
+      background: rgba(20, 20, 20, 0.9);
+      border: 1px solid #333;
+      border-radius: 15px;
+      padding: 20px;
+      margin-top: 20px;
+      max-height: 300px;
+      overflow-y: auto;
+      text-align: left;
+      transition: all var(--transition);
+    }
+
+    .chat-container.angry {
+      border-color: #ff3333;
+      box-shadow: 0 0 30px rgba(255, 0, 0, 0.3);
+    }
+
+    .message {
+      margin-bottom: 15px;
+      padding: 10px 15px;
+      border-radius: 10px;
+      animation: messageIn 0.3s ease;
+    }
+
+    @keyframes messageIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .message.user {
+      background: #1a1a1a;
+      color: #aaa;
+      border: 1px solid #333;
+      margin-left: 30px;
+    }
+
+    .message.character {
+      background: #222;
+      color: #ddd;
+      border: 1px solid #444;
+      margin-right: 30px;
+    }
+
+    .message.character.angry-message {
+      background: #2a0505;
+      color: #ff6666;
+      border: 1px solid #ff3333;
+    }
+
+    .message-label {
+      font-size: 0.8rem;
+      color: #666;
+      margin-bottom: 5px;
       font-weight: bold;
     }
 
-    button {
-      background: var(--primary);
-      color: white;
-      border: none;
-      padding: 0.8rem 1.5rem;
-      border-radius: 8px;
+    /* Ввод */
+    .input-container {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .chat-input {
+      flex: 1;
+      padding: 12px 18px;
+      background: #111;
+      border: 1px solid #333;
+      border-radius: 25px;
+      color: #ccc;
+      font-family: 'Courier New', monospace;
+      font-size: 1rem;
+      transition: all var(--transition);
+    }
+
+    .chat-input:focus {
+      outline: none;
+      border-color: #555;
+      box-shadow: 0 0 15px rgba(80, 80, 80, 0.3);
+    }
+
+    .send-btn {
+      padding: 12px 25px;
+      background: #222;
+      border: 1px solid #444;
+      border-radius: 25px;
+      color: #ccc;
+      font-family: 'Courier New', monospace;
+      font-size: 1rem;
       cursor: pointer;
-      font-weight: 500;
-      transition: background 0.2s;
+      transition: all var(--transition);
     }
 
-    button:hover {
-      background: #4338ca;
+    .send-btn:hover {
+      background: #333;
+      border-color: #666;
     }
 
-    footer {
-      margin-top: 3rem;
-      text-align: center;
-      color: #94a3b8;
-      font-size: 0.9rem;
+    /* Подсказки */
+    .hint-text {
+      color: #444;
+      font-size: 0.8rem;
+      margin-top: 15px;
+      font-style: italic;
+    }
+
+    /* Заголовок */
+    .title {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #888;
+      margin-bottom: 20px;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <header>
-      <h1>Добро пожаловать</h1>
-      <p class="subtitle">Это пример простого, но современного сайта</p>
-    </header>
+    <h1 class="title">БРЕНЛЕНД</h1>
 
-    <section class="card">
-      <h2>Что мы предлагаем</h2>
-      <p style="margin: 1rem 0;">
-        Мы делаем простые, чистые и понятные сайты, которые приятно открывать на любом устройстве.
-      </p>
-      <div class="features">
-        <div class="feature-item">
-          <span class="icon">⚡</span>
-          <span>Быстрая загрузка</span>
+    <div class="character-container">
+      <div class="character" id="character">
+        <div class="aura"></div>
+        <div class="head">
+          <div class="eyes">
+            <div class="eye"></div>
+            <div class="eye"></div>
+          </div>
+          <div class="mouth"></div>
         </div>
-        <div class="feature-item">
-          <span class="icon">📱</span>
-          <span>Адаптивность под мобильные</span>
-        </div>
-        <div class="feature-item">
-          <span class="icon">🎨</span>
-          <span>Приятный дизайн без лишнего шума</span>
+        <div class="body">
+          <div class="arms">
+            <div class="arm left"></div>
+            <div class="arm right"></div>
+          </div>
         </div>
       </div>
+      <div class="character-name" id="characterName">Пятый</div>
+    </div>
 
-      <button id="actionBtn">Узнать больше</button>
-    </section>
+    <div class="chat-container" id="chatContainer">
+      <div class="message character">
+        <div class="message-label">Пятый:</div>
+        Приветствую, странник. Я — Пятый, хранитель лора Бренленда. Спрашивай, и я поведаю тебе тайны этого мира.
+      </div>
+    </div>
 
-    <footer>
-      &copy; 2024 Мой мини-сайт. Всё просто и по делу.
-    </footer>
+    <div class="input-container">
+      <input type="text" class="chat-input" id="chatInput" placeholder="Спроси Пятого о Бренленде..." onkeypress="if(event.key === 'Enter') sendMessage()">
+      <button class="send-btn" onclick="sendMessage()">Спросить</button>
+    </div>
+
+    <div class="hint-text">
+      Спроси про: лор, историю, создателя, мир, тайны, Бренленд
+    </div>
   </div>
 
   <script>
-    const btn = document.getElementById('actionBtn');
-    btn.addEventListener('click', () => {
-      alert('Спасибо за клик! Скоро появится больше информации.');
-    });
+    (function() {
+      const character = document.getElementById('character');
+      const characterName = document.getElementById('characterName');
+      const chatContainer = document.getElementById('chatContainer');
+      const chatInput = document.getElementById('chatInput');
+
+      // База знаний Пятого
+      const knowledge = {
+        'лор': {
+          keywords: ['лор', 'история', 'расскажи', 'мир'],
+          response: 'Лор Бренленда глубок и многогранен. Этот мир был создан великим Xsioder\'ом, который вдохнул жизнь в каждый уголок этой вселенной. Здесь переплетаются судьбы игроков, а каждая постройка хранит свою тайну...',
+          angry: false
+        },
+        'создатель': {
+          keywords: ['создатель', 'ксиодер', 'xsioder', 'основатель'],
+          response: 'Xsioder — великий творец Бренленда. Он не просто создал сервер, он создал целую вселенную со своей историей, законами и духом. Грибы Грибочки — это его девиз, ставший легендой.',
+          angry: false
+        },
+        'тех админ': {
+          keywords: ['тех', 'админ', 'avrairut', 'тех админ', 'технический'],
+          response: 'AvraiRut — наш гениальный тех.админ. Он следит за тем, чтобы все механизмы работали идеально, и всегда готов помочь игрокам разобраться в сложных модах. Его терпению можно только позавидовать...',
+          angry: false
+        },
+        'фундример': {
+          keywords: ['фундример', 'fundreamer', 'сайт', 'создатель сайта'],
+          response: 'FunDreamer — тот самый творец этого сайта. Добрейшая душа на сервере. Он создал этот цифровой портал, чтобы каждый мог узнать о Бренленде. Дважды подумай прежде чем писать ему!',
+          angry: false
+        },
+        'фланалла': {
+          keywords: ['фланалла', 'flanalla', 'девушка', 'женщина'],
+          response: 'Flanalla — единственная девушка на сервере, и она невероятно помогает всем. Если что-то случилось — она всегда рядом. Не мы такие, жизнь такая...',
+          angry: false
+        },
+        'вова': {
+          keywords: ['вова', 'vova', 'электричество', 'механик'],
+          response: 'Vova — мастер механизмов и электричества. Он изучает схемы через Minecraft и достиг в этом невероятных высот. Ох Никола Тесла...',
+          angry: false
+        },
+        'абибек': {
+          keywords: ['абибек', 'abibek', 'неплохой'],
+          response: 'Abibek... Неплохой игрок. Увы.',
+          angry: false
+        },
+        'баунти': {
+          keywords: ['баунти', 'bounty', 'повар', 'еда'],
+          response: 'Bounty — наш повар. Он готовит лучшие блюда на сервере. Но не злите его...',
+          angry: true
+        },
+        'пятый': {
+          keywords: ['пятый', 'кто ты', 'ты кто'],
+          response: 'Я — Пятый. Хранитель знаний Бренленда. Я был здесь с самого начала и помню всё...',
+          angry: false
+        },
+        'привет': {
+          keywords: ['привет', 'здравствуй', 'хай', 'hello'],
+          response: 'И снова здравствуй, путник. Что ты хочешь узнать о Бренленде?',
+          angry: false
+        },
+        'пока': {
+          keywords: ['пока', 'до свидания', 'прощай'],
+          response: 'Уходишь? Помни — Бренленд всегда ждёт своих героев. Возвращайся...',
+          angry: false
+        },
+        'спасибо': {
+          keywords: ['спасибо', 'благодарю'],
+          response: 'Не за что. Знание должно быть доступно всем, кто ищет его.',
+          angry: false
+        },
+        'tailscale': {
+          keywords: ['tailscale', 'подключение', 'как зайти', 'вход'],
+          response: 'Чтобы попасть в Бренленд, тебе понадобится Tailscale. Это приватная сеть, через которую осуществляется вход. Скачай клиент и следуй инструкциям на сайте.',
+          angry: false
+        },
+        'грибы': {
+          keywords: ['грибы', 'грибочки'],
+          response: 'Грибы Грибочки! — легендарная фраза Xsioder\'а, ставшая символом Бренленда!',
+          angry: false
+        },
+        'секрет': {
+          keywords: ['секрет', 'тайна', 'скрытое'],
+          response: 'Тайны Бренленда не раскрываются первому встречному... Но ты кажешься достойным. В этом мире есть места, куда не ступала нога обычного игрока. Ищи, и найдёшь...',
+          angry: false
+        }
+      };
+
+      // Оскорбительные слова для триггера гнева
+      const insultWords = [
+        'дурак', 'тупой', 'глупый', 'идиот', 'ненавижу', 
+        'плохой', 'ужасный', 'отвратительный', 'бред', 'чушь',
+        'заткнись', 'молчи', 'надоел', 'бесишь'
+      ];
+
+      function getCharacterResponse(input) {
+        const lowerInput = input.toLowerCase();
+        
+        // Проверка на оскорбления
+        if (insultWords.some(word => lowerInput.includes(word))) {
+          return {
+            text: '... Ты смеешь так разговаривать со мной?! Я — Пятый, хранитель лора! Ты не достоин знаний Бренленда!',
+            angry: true
+          };
+        }
+
+        // Поиск по базе знаний
+        for (const [key, data] of Object.entries(knowledge)) {
+          if (data.keywords.some(keyword => lowerInput.includes(keyword))) {
+            return {
+              text: data.response,
+              angry: data.angry
+            };
+          }
+        }
+
+        // Ответ по умолчанию
+        return {
+          text: 'Интересный вопрос... Но я не уверен, что знаю на него ответ. Спроси меня о лоре, истории или игроках Бренленда.',
+          angry: false
+        };
+      }
+
+      function playSound(soundFile) {
+        const audio = new Audio(soundFile);
+        audio.play().catch(e => console.log('Аудио не может быть воспроизведено:', e));
+      }
+
+      function addMessage(text, type, isAngry = false) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${type}`;
+        
+        if (type === 'character' && isAngry) {
+          messageDiv.classList.add('angry-message');
+        }
+
+        const label = document.createElement('div');
+        label.className = 'message-label';
+        label.textContent = type === 'user' ? 'Вы:' : 'Пятый:';
+
+        const content = document.createElement('div');
+        content.textContent = text;
+
+        messageDiv.appendChild(label);
+        messageDiv.appendChild(content);
+        chatContainer.appendChild(messageDiv);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }
+
+      function setCharacterAngry(angry) {
+        if (angry) {
+          character.classList.add('angry');
+          characterName.textContent = 'ПЯТЫЙ (РАЗДРАЖЁН)';
+          chatContainer.classList.add('angry');
+          playSound('glitch.mp3');
+        } else {
+          character.classList.remove('angry');
+          characterName.textContent = 'Пятый';
+          chatContainer.classList.remove('angry');
+        }
+      }
+
+      window.sendMessage = function() {
+        const input = chatInput.value.trim();
+        if (!input) return;
+
+        // Добавляем сообщение пользователя
+        addMessage(input, 'user');
+        chatInput.value = '';
+
+        // Получаем ответ Пятого
+        const response = getCharacterResponse(input);
+
+        // Показываем реакцию
+        setTimeout(() => {
+          if (response.angry) {
+            setCharacterAngry(true);
+            playSound('say.wav');
+            setTimeout(() => {
+              addMessage(response.text, 'character', true);
+              playSound('glitch.mp3');
+            }, 300);
+            
+            // Возвращаем в нормальное состояние через 3 секунды
+            setTimeout(() => {
+              setCharacterAngry(false);
+            }, 3000);
+          } else {
+            playSound('say.wav');
+            addMessage(response.text, 'character');
+          }
+        }, 500);
+      };
+
+      // Фокус на input при загрузке
+      chatInput.focus();
+    })();
   </script>
 </body>
 </html>
