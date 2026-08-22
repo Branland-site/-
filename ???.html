@@ -1,1 +1,140 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Мой мини-сайт</title>
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --bg: #f8fafc;
+      --text: #1e293b;
+      --card: #ffffff;
+    }
 
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 2rem;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    h1 {
+      font-size: 2.25rem;
+      margin-bottom: 0.5rem;
+    }
+
+    p.subtitle {
+      color: #64748b;
+      font-size: 1.1rem;
+    }
+
+    .card {
+      background: var(--card);
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .features {
+      margin-top: 1.5rem;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .icon {
+      width: 24px;
+      height: 24px;
+      background: #e2e8f0;
+      color: #475569;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+
+    button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background: #4338ca;
+    }
+
+    footer {
+      margin-top: 3rem;
+      text-align: center;
+      color: #94a3b8;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Добро пожаловать</h1>
+      <p class="subtitle">Это пример простого, но современного сайта</p>
+    </header>
+
+    <section class="card">
+      <h2>Что мы предлагаем</h2>
+      <p style="margin: 1rem 0;">
+        Мы делаем простые, чистые и понятные сайты, которые приятно открывать на любом устройстве.
+      </p>
+      <div class="features">
+        <div class="feature-item">
+          <span class="icon">⚡</span>
+          <span>Быстрая загрузка</span>
+        </div>
+        <div class="feature-item">
+          <span class="icon">📱</span>
+          <span>Адаптивность под мобильные</span>
+        </div>
+        <div class="feature-item">
+          <span class="icon">🎨</span>
+          <span>Приятный дизайн без лишнего шума</span>
+        </div>
+      </div>
+
+      <button id="actionBtn">Узнать больше</button>
+    </section>
+
+    <footer>
+      &copy; 2024 Мой мини-сайт. Всё просто и по делу.
+    </footer>
+  </div>
+
+  <script>
+    const btn = document.getElementById('actionBtn');
+    btn.addEventListener('click', () => {
+      alert('Спасибо за клик! Скоро появится больше информации.');
+    });
+  </script>
+</body>
+</html>
